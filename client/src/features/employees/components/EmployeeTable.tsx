@@ -7,12 +7,22 @@ import {
     TableRow,
 } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
-import { Trash2 } from 'lucide-react';
+import { Trash2, Clock } from 'lucide-react';
 import { useEmployees } from '../api/use-employees';
 import { Skeleton } from '@/components/ui/skeleton';
+import { AttendanceDialog } from '@/features/attendance/components/AttendanceDialog';
+import { useState } from 'react';
+import type { Employee } from '../schemas/employee-schema';
 
 export function EmployeeTable() {
     const { employees, isLoading, deleteEmployee, isDeleting } = useEmployees();
+    const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
+    const [isAttendanceDialogOpen, setIsAttendanceDialogOpen] = useState(false);
+
+    const handleViewAttendance = (employee: Employee) => {
+        setSelectedEmployee(employee);
+        setIsAttendanceDialogOpen(true);
+    };
 
     if (isLoading) {
         return (
@@ -52,20 +62,36 @@ export function EmployeeTable() {
                             <TableCell>{employee.email}</TableCell>
                             <TableCell>{employee.department}</TableCell>
                             <TableCell className="text-right">
-                                <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    className="text-destructive hover:text-destructive hover:bg-destructive/10"
-                                    onClick={() => employee.id && deleteEmployee(employee.id)}
-                                    disabled={isDeleting}
-                                >
-                                    <Trash2 className="h-4 w-4" />
-                                </Button>
+                                <div className="flex justify-end gap-2">
+                                    <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        className="text-primary hover:text-primary hover:bg-primary/10"
+                                        onClick={() => handleViewAttendance(employee)}
+                                    >
+                                        <Clock className="h-4 w-4" />
+                                    </Button>
+                                    <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                                        onClick={() => employee.id && deleteEmployee(employee.id)}
+                                        disabled={isDeleting}
+                                    >
+                                        <Trash2 className="h-4 w-4" />
+                                    </Button>
+                                </div>
                             </TableCell>
                         </TableRow>
                     ))}
                 </TableBody>
             </Table>
+
+            <AttendanceDialog
+                employee={selectedEmployee}
+                open={isAttendanceDialogOpen}
+                onOpenChange={setIsAttendanceDialogOpen}
+            />
         </div>
     );
 }

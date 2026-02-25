@@ -25,3 +25,8 @@ def mark_attendance(session: Session, data):
     session.commit()
     session.refresh(record)
     return record
+
+def get_employee_attendance(session: Session, employee_id: int):
+    return session.exec(
+        select(Attendance).where(Attendance.employee_id == employee_id).order_by(Attendance.date.desc())
+    ).all()

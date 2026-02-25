@@ -1,7 +1,7 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '@/lib/api';
 import { toast } from 'sonner';
-import type { Attendance } from '../schemas/attendance-schema';
+import type { Attendance, AttendanceRecord } from '../schemas/attendance-schema';
 
 export const useAttendance = () => {
     const queryClient = useQueryClient();
@@ -11,8 +11,9 @@ export const useAttendance = () => {
             const { data } = await api.post('/attendance/', attendance);
             return data.data;
         },
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['employees'] }); // Assuming attendance might be listed under employee details or refreshes lists
+        onSuccess: (_, variables) => {
+            queryClient.invalidateQueries({ queryKey: ['employees'] });
+            queryClient.invalidateQueries({ queryKey: ['attendance', variables.employee_id] });
             toast.success('Attendance marked successfully');
         },
         onError: (error: any) => {
@@ -25,4 +26,16 @@ export const useAttendance = () => {
         markAttendance: markAttendanceMutation.mutate,
         isMarking: markAttendanceMutation.isPending,
     };
+};
+
+export const useEmployeeAttendance = (employeeId: number | undefined) => {
+    return useQuery({
+        queryKey: ['attendance', employeeId],
+        queryFn: async () => {
+            if (!employeeId) return [];
+            const { data } = await api.get(`/attendance/${employeeId}`);
+            return data.data as AttendanceRecord[];
+        },
+        enabled: !!employeeId,
+    });
 };
