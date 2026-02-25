@@ -11,7 +11,7 @@ function App() {
   const [activeTab, setActiveTab] = useState<Tab>('employees');
 
   return (
-    <div className="w-screen min-h-screen bg-neutral-50 flex flex-col">
+    <div className="w-full min-h-screen bg-neutral-50 flex flex-col">
       {/* Header */}
       <header className="bg-white border-b sticky top-0 z-10">
         <div className="max-w-full mx-auto px-4 h-16 flex items-center justify-between">

@@ -56,7 +56,7 @@ export function EmployeeTable() {
                                     variant="ghost"
                                     size="icon"
                                     className="text-destructive hover:text-destructive hover:bg-destructive/10"
-                                    onClick={() => deleteEmployee(employee.employee_id)}
+                                    onClick={() => employee.id && deleteEmployee(employee.id)}
                                     disabled={isDeleting}
                                 >
                                     <Trash2 className="h-4 w-4" />

@@ -30,7 +30,7 @@ export const useEmployees = () => {
     });
 
     const deleteEmployeeMutation = useMutation({
-        mutationFn: async (employeeId: string) => {
+        mutationFn: async (employeeId: number) => {
             const { data } = await api.delete(`/employees/${employeeId}`);
             return data.data;
         },
