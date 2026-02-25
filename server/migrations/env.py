@@ -8,7 +8,7 @@ from alembic import context
 
 from sqlmodel import SQLModel
 from modules.employees.models import Employee
-# from app.modules.attendance.models import Attendance
+from modules.attendance.models import Attendance
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
