@@ -1,4 +1,5 @@
-from sqlmodel import SQLModel, EmailStr
+from sqlmodel import SQLModel
+from pydantic import EmailStr
 
 class EmployeeCreate(SQLModel):
     employee_id: str
